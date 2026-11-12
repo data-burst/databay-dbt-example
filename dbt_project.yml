@@ -1,0 +1,12 @@
+name: databay_example
+version: "1.0.0"
+config-version: 2
+profile: databay
+
+models:
+  databay_example:
+    base:
+      +materialized: view
+    marts:
+      +materialized: table
+      +meta: {databay: {refresh: "every 1d"}}

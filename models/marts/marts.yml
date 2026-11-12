@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_users
+    description: One row per current user, with lifetime searches, conversations and clicks.
+    columns:
+      - name: user_id
+        tests: [unique, not_null]
+
+  - name: fct_search_sessions
+    description: One row per session that searched.
+    columns:
+      - name: session_id
+        tests: [unique, not_null]
+
+  - name: rpt_weekly_active_users
+    description: Weekly active users and new sign-ups.
+    config:
+      meta:
+        databay:
+          refresh: "every 1h"
