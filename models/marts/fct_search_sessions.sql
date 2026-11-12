@@ -9,6 +9,7 @@ with searches as (
         countIf(succeeded) as successful_searches,
         uniqExact(category) as categories
     from {{ ref('base_searches') }}
+    where session_id is not null
     group by session_id
 ),
 conversations as (
@@ -17,14 +18,14 @@ conversations as (
     group by session_id
 )
 select
-    s.session_id,
-    s.user_id,
-    s.started_at,
-    s.ended_at,
+    s.session_id as session_id,
+    s.user_id as user_id,
+    s.started_at as started_at,
+    s.ended_at as ended_at,
     dateDiff('second', s.started_at, s.ended_at) as duration_seconds,
-    s.searches,
-    s.successful_searches,
-    s.categories,
+    s.searches as searches,
+    s.successful_searches as successful_searches,
+    s.categories as categories,
     coalesce(c.conversations, 0) as conversations
 from searches s
 left join conversations c on c.session_id = s.session_id

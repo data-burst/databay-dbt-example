@@ -4,7 +4,7 @@ with search_weeks as (
     from {{ ref('base_searches') }}
 ),
 message_weeks as (
-    select toMonday(m.created_at) as week, c.user_id
+    select toMonday(m.created_at) as week, c.user_id as user_id
     from {{ ref('base_messages') }} m
     inner join {{ ref('base_conversations') }} c on c.conversation_id = m.conversation_id
 ),
@@ -23,9 +23,9 @@ joined as (
     group by week
 )
 select
-    a.week,
-    a.active_users,
+    a.week as week,
+    a.active_users as active_users,
     coalesce(j.new_users, 0) as new_users
 from active a
 left join joined j on j.week = a.week
-order by a.week
+order by week
